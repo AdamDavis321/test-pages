@@ -1,0 +1,95 @@
+{
+	"children" : [
+		{
+			"category" : "Development: HTML/Web",
+			"children" : [
+				{
+					"category" : "Books",
+					"children" : [
+						{
+							"link" : "Dive Into HTML5",
+							"url" : "http://diveinto.html5doctor.com/"
+						}, {
+							"link" : "Eloquent JavaScript Book",
+							"url" : "http://eloquentjavascript.net/contents.html"
+						}, {
+							"link" : "Learning JavaScript Design Patterns",
+							"url" : "http://www.addyosmani.com/resources/essentialjsdesignpatterns/book/"
+						}
+					]
+				}, {
+					"category" : "Tools",
+					"children" : [
+						{
+							"link" : "CSS Lint",
+							"url" : "http://csslint.net/"
+						}, {
+							"link" : "Eric Meyer: Tools (Color Blender, etc)",
+							"url" : "http://meyerweb.com/eric/tools/"
+						}, {
+							"link" : "JSHint, A JavaScript Code Quality Tool",
+							"url" : "http://www.jshint.com/"
+						}
+					]
+				}, {
+					"link" : "A List Apart",
+					"url" : "http://www.alistapart.com/"
+				}, {
+					"link" : "MDN: Gecko DOM Reference",
+					"url" : "https://developer.mozilla.org/en-US/docs/Gecko_DOM_Reference"
+				}, {
+					"link" : "WebPlatform.org &ndash; Your Web, documented",
+					"url" : "http://www.webplatform.org/"
+				}, {
+					"link" : "Web Standards Sherpa",
+					"url" : "http://webstandardssherpa.com/"
+				}
+			]
+		}, {
+			"category" : "Development: Java",
+			"children" : [
+				{
+					"link" : "Apache: Tomcat",
+					"url" : "http://tomcat.apache.org/index.html"
+				}, {
+					"link" : "Java Language Specification (SE 7)",
+					"url" : "http://docs.oracle.com/javase/specs/jls/se7/html/index.html"
+				}, {
+					"link" : "Javalobby",
+					"url" : "http://java.dzone.com/"
+				}, {
+					"link" : "Java Enterprise Edition 6 API",
+					"url" : "http://docs.oracle.com/javaee/6/api/"
+				}, {
+					"link" : "Java Standard Edition 7 API",
+					"url" : "http://docs.oracle.com/javase/7/docs/api/index.html"
+				}
+			]
+		}, {
+			"category" : "News Sites",
+			"children" : [
+				{
+					"link" : "CNN Interactive",
+					"url" : "http://www.cnn.com/"
+				}, {
+					"link" : "TIME.com",
+					"url" : "http://www.time.com/time/"
+				}
+			]
+		}, {
+			"category" : "Other Technical Sites",
+			"children" : [
+				{
+					"link" : "KDE Dot News",
+					"url" : "http://dot.kde.org/"
+				}, {
+					"link" : "Linux Journal",
+					"url" : "http://www.linuxjournal.com/"
+				}, {
+					"link" : "Slashdot",
+					"url" : "http://www.slashdot.org/"
+				}
+			]
+		}
+	]
+}

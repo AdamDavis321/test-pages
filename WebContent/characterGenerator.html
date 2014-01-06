@@ -1,0 +1,277 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+		"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="AUTHOR" content="Adam Davis">
+	<title>Character Generator</title>
+	<link rel="StyleSheet" href="generic/css/standard.css" title="Standard" type="text/css">
+	<style type="text/css" media="screen">
+		#page {
+			margin: 0 auto;
+			max-width: 80em;
+			min-width: 20em;
+		}
+		.CodePoint {
+			font-size: 88%;
+		}
+		.ControlChar {
+			background-color: #ffffcf;
+		}
+		.SpacingChar {
+			background-color: #cfffcf;
+		}
+		.TableLines {
+			line-height: 1.3em;
+			margin-top: 1em;
+		}
+		.TableLines tbody th {
+			background-color: #d2d2d7;
+			border-right: 2px solid gray;
+		}
+		.TableLines thead th.UpperLeftHeading {
+			background-color: gray;
+			border-right: 2px solid gray;
+		}
+	</style>
+	<script type="text/javascript" src="generic/js/miscUtils.js"></script>
+	<script type="text/javascript">
+		var controlChar = {
+			'0' : {code: 'NUL', title: "Null"},
+			'1' : {code: 'SOH', title: "Start of Heading"},
+			"2" : {code: "STX", title: "Start of Text"},
+			"3" : {code: "ETX", title: "End of Text"},
+			"4" : {code: "EOT", title: "End of Transmission"},
+			"5" : {code: "ENQ", title: "Enquiry"},
+			"6" : {code: "ACK", title: "Acknowledge"},
+			"7" : {code: "BEL", title: "Bell"},
+			"8" : {code: "BS", title: "Backspace"},
+			"10" : {code: "LF", title: "Line Feed"},
+			"11" : {code: "VT", title: "Vertical Tab"},
+			"12" : {code: "FF", title: "Form Feed"},
+			"13" : {code: "CR", title: "Carriage Return"},
+			"14" : {code: "SO", title: "Shift Out"},
+			"15" : {code: "SI", title: "Shift In"},
+			"16" : {code: "DLE", title: "Data Link Escape"},
+			"17" : {code: "DC1", title: "Device Control One (XON)"},
+			"18" : {code: "DC2", title: "Device Control Two"},
+			"19" : {code: "DC3", title: "Device Control Three (XOFF)"},
+			"20" : {code: "DC4", title: "Device Control Four"},
+			"21" : {code: "NAK", title: "Negative Acknowledge"},
+			"22" : {code: "SYN", title: "Synchronous Idle"},
+			"23" : {code: "ETB", title: "End of Transmission Block"},
+			"24" : {code: "CAN", title: "Cancel"},
+			"25" : {code: "EM", title: "End of medium"},
+			"26" : {code: "SUB", title: "Substitute"},
+			"27" : {code: "ESC", title: "Escape"},
+			"28" : {code: "FS", title: "File Separator"},
+			"29" : {code: "GS", title: "Group Separator"},
+			"30" : {code: "RS", title: "Record Separator"},
+			"31" : {code: "US", title: "Unit Separator"},
+			"127" : {code: "DEL", title: "Delete"},
+			"128" : {code: "PAD", title: "Padding Character"},
+			"129" : {code: "HOP", title: "High Octet Preset"},
+			"130" : {code: "BPH", title: "Break Permitted Here"},
+			"131" : {code: "NBH", title: "No Break Here"},
+			"132" : {code: "IND", title: "Index"},
+			"133" : {code: "NEL", title: "Next Line"},
+			"134" : {code: "SSA", title: "Start of Selected Area"},
+			"135" : {code: "ESA", title: "End of Selected Area"},
+			"136" : {code: "HTS", title: "Horizontal Tabulation Set"},
+			"137" : {code: "HTJ", title: "Horizontal Tabulation With Justification"},
+			"138" : {code: "VTS", title: "Vertical Tabulation Set"},
+			"139" : {code: "PLD", title: "Partial Line Down"},
+			"140" : {code: "PLU", title: "Partial Line Up"},
+			"141" : {code: "RI", title: "Reverse Index"},
+			"142" : {code: "SS2", title: "Single-Shift 2"},
+			"143" : {code: "SS3", title: "Single-Shift 3"},
+			"144" : {code: "DCS", title: "Device Control String"},
+			"145" : {code: "PU1", title: "Private Use 1"},
+			"146" : {code: "PU2", title: "Private Use 2"},
+			"147" : {code: "STS", title: "Set Transmit State"},
+			"148" : {code: "CCH", title: "Cancel character"},
+			"149" : {code: "MW", title: "Message Waiting"},
+			"150" : {code: "SPA", title: "Start of Protected Area"},
+			"151" : {code: "EPA", title: "End of Protected Area"},
+			"152" : {code: "SOS", title: "Start of String"},
+			"153" : {code: "SGCI", title: "Single Graphic Character Introducer"},
+			"154" : {code: "SCI", title: "Single Character Introducer"},
+			"155" : {code: "CSI", title: "Control Sequence Introducer"},
+			"156" : {code: "ST", title: "String Terminator"},
+			"157" : {code: "OSC", title: "Operating System Command"},
+			"158" : {code: "PM", title: "Privacy Message"},
+			"159" : {code: "APC", title: "Application Program Command"}
+		};
+		var spacingChar = {
+			"9" : {code: "HT", title: "Horizontal tab"},
+			"32" : {code: "SP", title: "Space"},
+			"160" : {code: "NBSP", title: "Non-breaking space"},
+			"173" : {code: "SHY", title: "Soft hyphen"},
+			"8194" : {code: "ENSP", title: "EN space"},
+			"8195" : {code: "EMSP", title: "EM space"},
+			"8201" : {code: "THSP", title: "Thin space"},
+			"8204" : {code: "ZWNJ", title: "Zero-width non-joiner"},
+			"8205" : {code: "ZWJ", title: "Zero-width joiner"},
+			"8206" : {code: "LRM", title: "Left-to-right mark"},
+			"8207" : {code: "RLM", title: "Right-to-left mark"}
+		}
+		
+		function createCell(r, c) {
+			var hex = Number(r).toString(16).toUpperCase() + Number(c).toString(16).toUpperCase();
+			var dec = '' + parseInt(hex, 16);
+			var ch = '';
+			var chClass = '';
+			var title = '';
+			var cell = document.createElement('td');
+			if (controlChar[dec]) {
+				ch = controlChar[dec].code;
+				chClass = 'ControlChar';
+				title = controlChar[dec].title;
+			}
+			else if (spacingChar[dec]) {
+				ch = spacingChar[dec].code;
+				chClass = 'SpacingChar';
+				title = spacingChar[dec].title;
+			}
+			else {
+				ch = '&#' + dec + ';';
+			}
+			cell.className = chClass;
+			cell.innerHTML = '<span class="CodePoint">' + dec + ':</span> ' + ch;
+			if (title) {
+				cell.title = title;
+			}
+			return cell;
+		}
+		
+		function createRow(n) {
+			var hexPrefix = Number(n).toString(16).toUpperCase();
+			var row = document.createElement('tr');
+			var rowHeading = document.createElement('th');
+			rowHeading.innerHTML = hexPrefix;
+			row.appendChild(rowHeading);
+			return row;
+		}
+		
+		function generateChars() {
+			var charTbody = document.getElementById('charTbody');
+			removeChildren(charTbody);
+			var codeRange = document.getElementById('codeRange');
+			var codePrefix = codeRange.value;
+			var start = parseInt(codePrefix + '0', 16);
+			var limit = start + 16;
+			for (var r = start; r < limit; r++) {
+				var row = createRow(r)
+				for (var c = 0; c < 16; c++) {
+					row.appendChild(createCell(r, c));
+				}
+				charTbody.appendChild(row);
+			}
+		}
+		
+		window.onload = function() {
+			var codeRange = document.getElementById('codeRange');
+			codeRange.onchange = generateChars;
+			generateChars();
+		};
+	</script>
+</head>
+<body>
+<div id="page">
+
+	<div id="pageHeader">
+		<h1>Character Generator</h1>
+	</div>
+	<div id="pageContent">
+
+		<form action="get" target="characterGenerator.html">
+			UTF-8 characters in the following code ranges:
+			<select id="codeRange" name="codeRange" size="1">
+				<option value="00" selected="selected">U+0000 - U+00FF</option>
+				<option value="01">U+0100 - U+01FF</option>
+				<option value="02">U+0200 - U+02FF</option>
+				<option value="03">U+0300 - U+03FF</option>
+				<option value="04">U+0400 - U+04FF</option>
+				<option value="05">U+0500 - U+05FF</option>
+				<option value="06">U+0600 - U+06FF</option>
+				<option value="07">U+0700 - U+07FF</option>
+				<option value="08">U+0800 - U+08FF</option>
+				<option value="09">U+0900 - U+09FF</option>
+				<option value="0a">U+0A00 - U+0AFF</option>
+				<option value="0b">U+0B00 - U+0BFF</option>
+				<option value="0c">U+0C00 - U+0CFF</option>
+				<option value="0d">U+0D00 - U+0DFF</option>
+				<option value="0e">U+0E00 - U+0EFF</option>
+				<option value="0f">U+0F00 - U+0FFF</option>
+				<option value="10">U+1000 - U+10FF</option>
+				<option value="11">U+1100 - U+11FF</option>
+				<option value="12">U+1200 - U+12FF</option>
+				<option value="13">U+1300 - U+13FF</option>
+				<option value="14">U+1400 - U+14FF</option>
+				<option value="15">U+1500 - U+15FF</option>
+				<option value="16">U+1600 - U+16FF</option>
+				<option value="17">U+1700 - U+17FF</option>
+				<option value="18">U+1800 - U+18FF</option>
+				<option value="19">U+1900 - U+19FF</option>
+				<option value="1a">U+1A00 - U+1AFF</option>
+				<option value="1b">U+1B00 - U+1BFF</option>
+				<option value="1c">U+1C00 - U+1CFF</option>
+				<option value="1d">U+1D00 - U+1DFF</option>
+				<option value="1e">U+1E00 - U+1EFF</option>
+				<option value="1f">U+1F00 - U+1FFF</option>
+				<option value="20">U+2000 - U+20FF</option>
+				<option value="21">U+2100 - U+21FF</option>
+				<option value="22">U+2200 - U+22FF</option>
+				<option value="23">U+2300 - U+23FF</option>
+				<option value="24">U+2400 - U+24FF</option>
+				<option value="25">U+2500 - U+25FF</option>
+				<option value="26">U+2600 - U+26FF</option>
+				<option value="27">U+2700 - U+27FF</option>
+				<option value="28">U+2800 - U+28FF</option>
+				<option value="29">U+2900 - U+29FF</option>
+				<option value="2a">U+2A00 - U+2AFF</option>
+				<option value="2b">U+2B00 - U+2BFF</option>
+				<option value="2c">U+2C00 - U+2CFF</option>
+				<option value="2d">U+2D00 - U+2DFF</option>
+				<option value="2e">U+2E00 - U+2EFF</option>
+				<option value="2f">U+2F00 - U+2FFF</option>
+			</select> 
+		</form>
+
+		<table class="TableLines">
+			<thead>
+				<tr>
+					<th class="UpperLeftHeading"></th>
+					<th>+0</th>
+					<th>+1</th>
+					<th>+2</th>
+					<th>+3</th>
+					<th>+4</th>
+					<th>+5</th>
+					<th>+6</th>
+					<th>+7</th>
+					<th>+8</th>
+					<th>+9</th>
+					<th>+A</th>
+					<th>+B</th>
+					<th>+C</th>
+					<th>+D</th>
+					<th>+E</th>
+					<th>+F</th>
+				</tr>
+			</thead>
+			<tbody id="charTbody">
+			</tbody>
+		</table>
+
+	</div>
+	<div id="pageFooter">
+		<div class="Author">Created by Adam Davis</div>
+		<div class="Links"><a href="index.html">Home</a></div>
+		<div class="FloatBlocker"></div>
+	</div>
+
+</div>
+</body>
+</html>
+	

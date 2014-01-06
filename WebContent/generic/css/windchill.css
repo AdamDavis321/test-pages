@@ -1,0 +1,102 @@
+@CHARSET "ISO-8859-1";
+
+@media all {
+body {
+	padding: 0;
+}
+.Nav1, .Nav2 {
+	white-space: nowrap;
+	width: 100%;
+}
+.Nav2 {
+	border-bottom: 2px solid #BCBDB1;
+	border-top: 1px solid #BCBDB1;
+}
+.Nav1 a.Here, .Nav2 a.Here {
+	border-color: #8C8972;
+	border-style: solid;
+	border-width: 1px 2px 2px 1px;
+}
+.Nav2 LI {
+	border-left: 1px solid #BCBDB1;
+}
+.Nav1 LI, .Nav2 LI {
+	display: inline;
+	list-style: none outside none;
+}
+.SearchBar {
+	display: block;
+	position: absolute;
+	right: 30px;
+	text-align: right;
+}
+.Frame {
+	border-color: #BABFB0;
+	border-style: solid;
+	border-width: 1px 2px 2px 1px;
+}
+.Frame .Title {
+	border-bottom: 1px solid #BABFB0;
+	width: 100%;
+}
+.Frame .Actions {
+	width: 100%;
+}
+.Frame table {
+	border-left: 1px solid #C8C9BF;
+	border-right: 1px solid #C8C9BF;
+	border-top: 1px solid #C8C9BF;
+}
+.Frame table td {
+	border-bottom: 1px solid #7A7B71;
+	border-right: 1px solid #BABFB0;
+	border-top: 1px solid #7A7B71;
+}
+.Frame .Message {
+	width: 100%;
+}
+}
+
+@media screen {
+body {
+	background-color: #E7E9E0;
+	color: black;
+}
+#page {
+	background-color: inherit;
+	border-radius: 0;
+	color: inherit;
+}
+#pageHeader, #pageFooter {
+	background-color: #40637A;
+	border-radius: 0;
+	color: white;
+}
+.Nav1, .Nav2 {
+	background-color: #DEDECE;
+	color: black;
+}
+.Nav1 a.Here, .Nav2 a.Here {
+	background-color: #FDF8CE;
+	color: black;
+}
+.Contextbar {
+	background-color: white;
+	color: black;
+}
+.Frame {
+	background-color: #D6D5C7;
+	color: black;
+}
+.Frame .Title {
+	background-color: #FDF8CE;
+	color: #48483E;
+}
+.Frame .Emptytable {
+	background-color: white;
+	color: #4D5132;
+}
+}
+
+@media print {
+}

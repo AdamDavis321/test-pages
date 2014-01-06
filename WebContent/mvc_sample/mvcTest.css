@@ -1,0 +1,82 @@
+@media all {
+	#editForm table {
+		border: 1px solid #C8C8D0;
+		width: 100%;
+	}
+	#editForm th {
+		font-weight: bold;
+		text-align: right;
+		vertical-align: top;
+		width: 5em;
+	}
+	#editForm td {
+		text-align: left;
+		vertical-align: bottom;
+	}
+
+	#noteTitle {
+		width: 98%;
+	}
+	#saveButton {
+		display: block;
+		float: left;
+	}
+	#resetButton {
+		display: block;
+		float: left;
+		margin-left: 3px;
+	}
+	#deleteButton {
+		display: block;
+		float: right;
+	}
+
+	#displayTable {
+		margin-top: 0.5em;
+		width: 100%;
+	}
+	#displayTable th {
+		text-align: left;
+		vertical-align: bottom;
+	}
+	#displayTable td {
+		text-align: left;
+		vertical-align: top;
+	}
+	.idColumn {
+		width: 5%;
+	}
+	.categoryColumn {
+		width: 20%;
+	}
+	.titleColumn {
+		width: 40%;
+	}
+	.budgetColumn {
+		width: 10%;
+	}
+	.creatDateColumn {
+		width: 25%;
+	}
+}
+
+@media screen {
+	#page {
+		margin: 0 auto;
+		max-width: 64em;
+		min-width: 32em;
+	}
+	input.InError, select.InError, textarea.InError {
+		border-color: #C06969 #E0C8C8 #E0C8C8 #C06969;
+	}
+	input.InError:hover, select.InError:hover, textarea.InError:hover {
+		border-color: #FF6969 #FFC8C8 #FFC8C8 #FF6969;
+	}
+	input.InError:focus, select.InError:focus, textarea.InError:focus {
+		border-color: #FF6969 #FFC8C8 #FFC8C8 #FF6969;
+	}
+
+	.Selected td {
+		background-color: #6ED6FF;
+	}
+}

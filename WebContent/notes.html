@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>Notes: An IndexedDB Example</title>
+	<link rel="stylesheet" href="generic/css/standard.css" />
+	<style type="text/css">
+		#page {
+			min-width: 37em;
+		}
+		#notesTable {
+			width: 100%;
+		}
+		.IdColumn {
+			width: 5%;
+		}
+		.TitleColumn {
+			width: 25%;
+		}
+		.NotesColumn {
+			width: 40%;
+		}
+		.CreateDateColumn {
+			width: 10%;
+		}
+		.UpdateDateColumn {
+			width: 10%;
+		}
+		.ActionColumn {
+			width: 10%;
+		}
+		.TitleInput {
+			width: 98%;
+		}
+		.NotesInput {
+			height: 6em;
+			width: 98%;
+		}
+		.TableLines tfoot td {
+			background-color: transparent;
+			border-top: 1px solid gray;
+		}
+	</style>
+	<style type="text/css" media="screen">
+		.Changed {
+			background-color: #DDEEFF;
+		}
+		input.InError, textarea.InError {
+			border-color: #ff6879 #ffd2d7 #ffd2d7 #ff6879;
+		}
+		input.InError:hover, textarea.InError:hover {
+			border-color: #ff68ff #d2d2ff #ffd2ff #ff68ff;
+		}
+		input.InError:focus, textarea.InError:focus {
+			border-color: #ff68ff #ffd2ff #ffd2ff #ff68ff;
+		}
+	</style>
+	<script type="text/javascript" src="generic/js/miscUtils.js"></script>
+	<script type="text/javascript" src="generic/js/dateUtils.js"></script>
+	<script type="text/javascript" src="generic/js/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript">
+		// Missing console safeguard
+		if (!window.console) {
+			window.console = {
+				log: function() {},
+				error: function() {}
+			};
+		}
+
+		// indexedDB initialization
+		window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB 
+				|| window.msIndexedDB;
+		window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction;
+		window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange;
+		
+		// Model definition --------------------------------------------------
+		
+		function NotesModel() {
+			this.db = null;
+			this.items = [];
+		}
+		NotesModel.prototype = {
+				
+			create : function(item, successFn, errorFn) {
+				window.console.log('NotesModel.create: item= ', item);
+				var me = this;
+				item.createDate = new Date();
+				item.updateDate = item.createDate;
+				me.open(function() {
+					var trans = me.db.transaction(['notes'], 'readwrite');
+					var store = trans.objectStore('notes');
+					var request = store.put(item);
+					request.onsuccess = function(e) {
+						window.console.log('NotesModel.create - onsuccess: e= ', e);
+						item.id = e.target.result;
+						me.items.push(item);
+						if (successFn) {
+							successFn(item);
+						}
+					};
+					request.onerror = function(e) {
+						window.console.log('NotesModel.create - onerror: e= ', e);
+						me.onError(e, errorFn);
+					};
+				}, errorFn);
+			},
+
+			indexOf : function(item) {
+				var result = -1;
+				for (var i = 0; i < this.items.length; i++) {
+					if (this.items[i].id === item.id) {
+						result = i;
+						break;
+					}
+				}
+				return result;
+			},
+			
+			onError : function(e, errorFn) {
+				if (errorFn) {
+					errorFn(e.target.errorCode);
+				} else {
+					window.console.error(e.target.errorCode);
+					alert('IndexedDB Error: ' + e.target.errorCode);
+				}
+			},
+			
+			open : function(operationFn, errorFn) {
+				window.console.log('NotesModel.open');
+				var me = this;
+				if (!me.db) {
+					var request = window.indexedDB.open('notesDB', 1);
+					request.onupgradeneeded = function(e) {
+						window.console.log('NotesModel.open - onupgradeneeded: e= ', e);
+						me.db = e.target.result;
+						if(!me.db.objectStoreNames.contains('notes')){
+							me.db.createObjectStore('notes', {keyPath: 'id', autoIncrement: true});
+						}
+					};
+					request.onsuccess = function(e) {
+						window.console.log('NotesModel.open - onsuccess: e= ', e);
+						me.db = e.target.result;
+						operationFn();
+					};
+					request.onerror = function(e) {
+						window.console.log('NotesModel.open - onerror: e= ', e);
+						me.onError(e, errorFn);
+					};
+				} else {
+					operationFn();
+				}
+			},
+			
+			readAll : function(successFn, errorFn) {
+				window.console.log('NotesModel.readAll');
+				var me = this;
+				me.open(function() {
+					me.items = [];
+					var trans = me.db.transaction(['notes'], 'readwrite');
+					var store = trans.objectStore('notes');
+					var keyRange = window.IDBKeyRange.lowerBound(0);
+					var cursorRequest = store.openCursor(keyRange);
+					cursorRequest.onsuccess = function(e) {
+						var result = e.target.result;
+						if (!!result == false) {
+							window.console.log('NotesModel.readAll - onsuccess: done items= ', me.items);
+							if (successFn) {
+								successFn(me.items);
+							}
+							return;
+						}
+						me.items.push(result.value);
+						result.continue();
+					};
+					cursorRequest.onerror = function(e) {
+						window.console.log('NotesModel.readAll - onerror: e= ', e);
+						me.onError(e, errorFn);
+					};
+				}, errorFn);
+			},
+			
+			remove : function(item, successFn, errorFn) {
+				window.console.log('NotesModel.remove: item= ', item);
+				var me = this;
+				me.open(function() {
+					var trans = me.db.transaction(['notes'], 'readwrite');
+					var store = trans.objectStore('notes');
+					var request = store.delete(item.id);
+					request.onsuccess = function(e) {
+						window.console.log('NotesModel.remove - onsuccess: e= ', e);
+						var idx = me.indexOf(item);
+						if (idx >= 0) {
+							me.items.splice(idx, 1);
+						}
+						if (successFn) {
+							successFn(item);
+						}
+					};
+					request.onerror = function(e) {
+						window.console.log('NotesModel.remove - onerror: e= ', e);
+						me.onError(e, errorFn);
+					};
+				}, errorFn);
+			},
+			
+			toString : function() {
+				return '(NotesModel: db= ' + this.db + ', items.length= ' + this.items.length + ')';
+			},
+			
+			update : function(item, successFn, errorFn) {
+				window.console.log('NotesModel.update: item= ', item);
+				var me = this;
+				item.updateDate = new Date();
+				me.open(function() {
+					var trans = me.db.transaction(['notes'], 'readwrite');
+					var store = trans.objectStore('notes');
+					var request = store.put(item);
+					request.onsuccess = function(e) {
+						window.console.log('NotesModel.update - onsuccess: e= ', e);
+						var idx = me.indexOf(item);
+						if (idx >= 0) {
+							me.items[idx] = item;
+						}
+						if (successFn) {
+							successFn(item);
+						}
+					};
+					request.onerror = function(e) {
+						window.console.log('NotesModel.update - onerror: e= ', e);
+						me.onError(e, errorFn);
+					};
+				}, errorFn);
+			}
+		
+		};
+		
+		// View definition --------------------------------------------------
+		
+		function NotesView() {
+			this.notesTable = $('#notesTable');
+			this.notesTableBody = this.notesTable.children('tbody');
+			this.notesTableFooter = this.notesTable.children('tfoot');
+		}
+		NotesView.prototype = {
+			
+			clearCreateInputs : function() {
+				this.notesTableFooter.find('.TitleInput').val('');
+				this.notesTableFooter.find('.NotesInput').val('');
+			},
+			
+			displayItems : function(items) {
+				window.console.log('NotesView.displayItems: items.length= ', items.length);
+				var rows = [];
+				for (var i = 0; i < items.length; i++) {
+					rows.push(this.getRowFromItem(i, items[i]));
+				}
+				this.notesTableBody.empty().append(rows);
+				this.clearCreateInputs();
+			},
+			
+			getIdFromRow : function(row) {
+				var id = null;
+				var idStr = unescapeHTML(row.find('td:first').text());
+				if (idStr) {
+					id = Number(idStr);
+				}
+				return id;
+			},
+			
+			getItemFromRow : function(row) {
+				var item = {
+					title: row.find('.TitleInput').val(),
+					notes: row.find('.NotesInput').val()
+				};
+				var idStr = unescapeHTML(row.find('td:first').text());
+				if (idStr) {
+					item.id = Number(idStr);
+				}
+				var crtStr = unescapeHTML(row.find('td:nth-child(4)').text());
+				if (crtStr) {
+					item.createDate = parseDateTimeUSA(crtStr);
+				}
+				var updStr = unescapeHTML(row.find('td:nth-child(5)').text());
+				if (updStr) {
+					item.updateDate = parseDateTimeUSA(updStr);
+				}
+				return item;
+			},
+			
+			getRowFromItem : function(i, item) {
+				var id = escapeHTML(item.id);
+				var title = '<input type="text" class="TitleInput" value="' + item.title + '">';
+				var notes = '<textarea class="NotesInput">' + item.notes + '</textarea>';
+				var crtDate = escapeHTML(formatDateTimeUSA(item.createDate, true));
+				var updDate = escapeHTML(formatDateTimeUSA(item.updateDate, true));
+				var actions = '<button type="button" class="UpdateAction" disabled="disabled">' 
+						+ 'Update</button>' 
+						+ ' <button type="button" class="DeleteAction">Delete</button>';
+				return $('<tr id="noteRow' + i + '"><td>' + id + '</td><td>' + title 
+						+ '</td><td>' + notes + '</td><td>' + crtDate + '</td><td>' + updDate 
+						+ '</td><td>' + actions + '</td></tr>');
+			},
+			
+			showChangeStatus : function(input, changed) {
+				if (changed) {
+					input.addClass('Changed');
+				} else {
+					input.removeClass('Changed');
+				}
+			},
+			
+			showErrorStatus : function(input, message) {
+				if (message) {
+					input.addClass('InError');
+					input.attr('title', message);
+				} else {
+					input.removeClass('InError');
+					input.removeAttr('title');
+				}
+			},
+			
+			toString : function() {
+				return '(NotesView: notesTable= ' + this.notesTable
+						+ ', notesTableBody= ' + this.notesTableBody
+						+ ', notesTableFooter= ' + this.notesTableFooter + ')';
+			}
+		
+		};
+		
+		// Controller definition --------------------------------------------------
+		
+		function NotesController(model, view) {
+			this.model = model;
+			this.view = view;
+			this.keyTimeoutId = 0;
+			this.keyTimeoutWait = 1000;
+		}
+		NotesController.prototype = {
+				
+			checkFieldChanges : function(input, prevValue) {
+				var me = this;
+				var changed = false;
+				if (input.val() != prevValue) {
+					changed = true;
+				}
+				me.view.showChangeStatus(input, changed);
+				return changed;
+			},
+		
+			checkRowChanges : function(row) {
+				var me = this;
+				var prevItem = me.getPreviousItem(row);
+				var changed1 = me.checkFieldChanges(row.find('.TitleInput'), prevItem.title);
+				var changed2 = me.checkFieldChanges(row.find('.NotesInput'), prevItem.notes);
+				return changed1 || changed2;
+			},
+			
+			createEntry : function(event) {
+				window.console.log('NotesController.createEntry');
+				var me = this;
+				var button = $(event.target);
+				if (!button.prop('disabled')) {
+					button.prop('disabled', true);
+					var row = button.parents('tr');
+					var item = me.view.getItemFromRow(row);
+					me.model.create(item, function(item) {
+						me.displayEntries(me.model.items);
+					});
+				}
+			},
+			
+			deleteEntry : function(event) {
+				window.console.log('NotesController.deleteEntry');
+				var me = this;
+				var button = $(event.target);
+				var row = button.parents('tr');
+				var item = me.view.getItemFromRow(row);
+				if (confirm('Do you want to delete the "' + item.title + '" note?')) {
+					if (!button.prop('disabled')) {
+						button.prop('disabled');
+						me.model.remove(item, function(item) {
+							me.displayEntries(me.model.items);
+						});
+					}
+				}
+			},
+			
+			displayEntries : function(items) {
+				window.console.log('NotesController.displayEntries: items.length= ' + items.length);
+				this.view.displayItems(items);
+			},
+			
+			getPreviousItem : function(row) {
+				var me = this;
+				var idNbr = me.view.getIdFromRow(row);
+				if (idNbr !== null) {
+					var idx = me.model.indexOf({id: idNbr});
+					if (idx >= 0) {
+						return me.model.items[idx];
+					}
+				}
+				return {
+					title: '',
+					notes: ''
+				};
+			},
+			
+			inputKeyPressed : function(event) {
+				var me = this;
+				if (me.keyTimeoutId) {
+					window.clearTimeout(me.keyTimeoutId);
+				}
+				window.setTimeout(function() {
+					me.keyTimeoutId = 0;
+					var input = $(event.target);
+					var row = input.parents('tr');
+					var changed = me.checkRowChanges(row);
+					var okay = me.validateRow(row);
+					var buttons = row.find('.CreateAction, .UpdateAction');
+					buttons.prop('disabled', !(changed && okay));
+				}, me.keyTimeoutWait);
+			},
+			
+			loadEntries : function() {
+				window.console.log('NotesController.loadEntries');
+				var me = this;
+				me.model.readAll(function(items) {
+					me.displayEntries(items);
+				});
+			},
+
+			setEventHandlers : function() {
+				window.console.log('NotesController.setEventHandlers');
+				var me = this;
+				me.view.notesTable.on('click', '.CreateAction', function (e) {
+					me.createEntry(e);
+				});
+				me.view.notesTable.on('click', '.UpdateAction', function (e) {
+					me.updateEntry(e);
+				});
+				me.view.notesTable.on('click', '.DeleteAction', function (e) {
+					me.deleteEntry(e);
+				});
+				me.view.notesTable.on('keypress', '.TitleInput, .NotesInput', function (e) {
+					me.inputKeyPressed(e);
+				});
+			},
+			
+			toString : function() {
+				return '(NotesController: model= ' + this.model + ', view= ' + this.view + ')';
+			},
+			
+			updateEntry : function(event) {
+				window.console.log('NotesController.updateEntry');
+				var me = this;
+				var button = $(event.target);
+				if (!button.prop('disabled')) {
+					button.prop('disabled');
+					var row = button.parents('tr');
+					var item = me.view.getItemFromRow(row);
+					me.model.update(item, function(item) {
+						me.displayEntries(me.model.items);
+					});
+				}
+			},
+			
+			validateFieldRequired : function(input) {
+				var me = this;
+				var value = input.val();
+				var okay = (value && $.trim(value));
+				me.view.showErrorStatus(input, (!okay? 'Field is required.' : ''));
+				return okay;
+			},
+			
+			validateRow : function(row) {
+				var me = this;
+				var okay1 = me.validateFieldRequired(row.find('.TitleInput'));
+				var okay2 = me.validateFieldRequired(row.find('.NotesInput'));
+				return okay1 && okay2;
+			}
+			
+		};
+		
+		$(document).ready(function () {
+			var controller = new NotesController(new NotesModel(), new NotesView());
+			controller.setEventHandlers();
+			if (!window.indexedDB || !window.IDBTransaction || !window.IDBKeyRange) {
+				alert('Warning: your browser may not support indexedDB.');
+			}
+			controller.loadEntries();
+		});
+	</script>
+</head>
+<body>
+<div id="page">
+
+	<div id="pageHeader">
+		<h1>Notes: An IndexedDB Example</h1>
+	</div>
+
+	<div id="pageContent">
+		<form action="notes.html">
+			<table class="TableLines" id="notesTable">
+				<thead>
+					<tr>
+						<th class="IdColumn">ID</th>
+						<th class="TitleColumn">Title</th>
+						<th class="NotesColumn">Notes</th>
+						<th class="CreateDateColumn">Created</th>
+						<th class="UpdateDateColumn">Last Updated</th>
+						<th class="ActionColumn">Actions</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+				<tfoot>
+					<tr>
+						<td></td>
+						<td><input type="text" class="TitleInput" value=""></td>
+						<td><textarea class="NotesInput"></textarea></td>
+						<td></td>
+						<td></td>
+						<td><button type="button" class="CreateAction" disabled="disabled"
+								>Create</button></td>
+					</tr>
+				</tfoot>
+			</table>
+		</form>
+	</div>
+
+	<div id="pageFooter">
+		<div class="Author">Created by Adam Davis</div>
+		<div class="Links"><a href="index.html">Home</a></div>
+		<div class="FloatBlocker"></div>
+	</div>
+
+</div>
+</body>
+</html>

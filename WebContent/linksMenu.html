@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="AUTHOR" content="Adam Davis" />
+	<title>Links Menu</title>
+	<link rel="stylesheet" href="generic/css/standard.css" />
+	<link rel="stylesheet" href="generic/css/treeList.css" />
+	<style type="text/css" media="screen">
+		#page {
+			max-width: 64em;
+			min-width: 25em;
+		}
+		#pageHeader h1 {
+			float: left;
+		}
+		#pageHeader div {
+			float: right;
+			font-size: 72%;
+		}
+		#menuContainer {
+			border: 1px solid #B2B2B7;
+			border-radius: 6px;
+			margin: 0;
+			padding-left: 2px;
+			width: 24em;
+		}
+		ul.treeList li {
+			border-radius: 6px;
+			margin: 2px 2px 2px 0;
+			padding-left: 0.25em;
+		}
+		ul.treeList li.treeList-category {
+			background-color: #D2D2D7;
+			border: 1px solid #B2B2B7;
+		}
+		ul.treeList li.treeList-category.treeList-open {
+			background-color: #F7F7F7;
+		}
+	</style>
+	<script type="text/javascript" src="generic/js/miscUtils.js"></script>
+	<script type="text/javascript" src="generic/js/localStorage.js"></script>
+	<script type="text/javascript" src="generic/js/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript" src="generic/js/treeList.js"></script>
+	<script type="text/javascript">
+		if (!window.console) {
+			window.console = {log: function(){}};
+		}
+		
+		function MenuController() {
+			"use strict";
+			this.menuTree = null;
+		}
+		
+		MenuController.prototype.loadMenu = function(data, container, openAllControl, 
+				closeAllControl) {
+			"use strict";
+			if (data) {
+				var list = $(data);
+				this.menuTree = new TreeList(list, {
+					categoryIdPrefix: 'linkCategory',
+					onOpen: function(item) {
+						window.console.log('item opened: item.id= ' + item.id);
+						var openItems = getItemsFromLocalStorage('linksMenu_openItems');
+						var i = $.inArray(item.id, openItems);
+						if (i < 0) {
+							openItems.push(item.id);
+						}
+						putItemsInLocalStorage('linksMenu_openItems', openItems);
+					}, 
+					onClose: function(item) {
+						window.console.log('item closed: item.id= ' + item.id);
+						var openItems = getItemsFromLocalStorage('linksMenu_openItems');
+						var i = $.inArray(item.id, openItems);
+						if (i >= 0) {
+							openItems.splice(i, 1);
+						}
+						putItemsInLocalStorage('linksMenu_openItems', openItems);
+					}
+				});
+				container.append(list);
+				var controller = this;
+				if (openAllControl) {
+					openAllControl.click(function() {
+						controller.menuTree.openAll();
+					});
+				}
+				if (closeAllControl) {
+					closeAllControl.click(function() {
+						controller.menuTree.closeAll();
+					});
+				}
+			} else {
+				window.alert('The menu contents are empty.');
+			}
+		};
+
+		MenuController.prototype.reopenPreviousItems = function() {
+			"use strict";
+			if (this.menuTree) {
+				// Read previously open IDs from the cookie
+				var openItems = getItemsFromLocalStorage('linksMenu_openItems');
+				window.console.log('openItems (from localStorage)= ' + openItems);
+				this.menuTree.fireEvents = false;
+				var i, len;
+				for (i = 0, len = openItems.length; i < len; i++) {
+					var li = $('#' + openItems[i]);
+					if (li && li.length) {
+						this.menuTree.open(li);
+					} else {
+						// Mark missing IDs for later removal
+						openItems[i] = '';
+					}
+				}
+				this.menuTree.fireEvents = true;
+				// Remove missing IDs from localStorage
+				for (i = openItems.length - 1; i >= 0; i--) {
+					if (!openItems[i]) {
+						openItems.splice(i, 1);
+					}
+				}
+				putItemsInLocalStorage('linksMenu_openItems', openItems);
+			}
+		};
+		
+		$(document).ready(function() {
+			"use strict";
+			var keys = [];
+			for (var i = 0, len = localStorage.length; i < len; i++) {
+				keys.push(localStorage.key(i));
+			}
+			window.console.log('localStorage keys= ' + keys.join('|'));
+			var controller = new MenuController();
+			$.ajax({
+				dataType: "html",
+				url: "data/linkItems.html",
+				error: function(jqXHR, textStatus, errorThrown) {
+					window.alert('An error occurred while retrieving the menu contents: \nStatus= ' 
+							+ textStatus + '\nError= ' + errorThrown);
+				},
+				success: function(data, textStatus, jqXHR) {
+					controller.loadMenu(data, $('#menuContainer'), $('#openAll'), $('#closeAll'));
+					controller.reopenPreviousItems();
+				}
+			});
+		});
+	</script>
+</head>
+<body>
+<div id="page">
+
+	<div id="pageHeader">
+		<h1>Links Menu</h1>
+		<div><button id="openAll">Open All</button> <button id="closeAll">Close All</button></div>
+	</div>
+	<div id="pageContent">
+
+		<div id="menuContainer">
+		</div>
+
+	</div>
+
+</div>
+</body>
+</html>

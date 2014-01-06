@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>TODO: An IndexedDB Example</title>
+	<style type="text/css">
+		h1 { font-size: 124%; }
+		#todos li span { display: none; }
+	</style>
+	<script type="text/javascript" src="generic/js/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript">
+		if (!window.console) {
+			window.console = {
+				log: function() {}
+			};
+		}
+
+		// events
+		$(function () {
+			$('[type=submit]').on('click', function (e) {
+				todoController.addTodo($('#todo').val());
+				$('#todo').val('');
+				return false;
+			});
+
+			$('#todos').on('click', '.delete', function (e) {
+				todoController.deleteTodo(parseInt($(this).parent().find('span').text()));
+				return false;
+			});
+
+			todoController.open(); // open displays the data previously saved
+		});
+
+		// indexeddb
+		window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB 
+				|| window.msIndexedDB;
+		window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction;
+		window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange;
+
+		var todoController = {}; // open, addTodo, getAllTodoItems, deleteTodo - are own methods
+		todoController.db = null; // holds the real instance of the indexedDB
+
+		// generic onerror
+		todoController.onerror = function(e) {
+			window.console.log(e.value);
+		};
+		
+		// open/create
+		todoController.open = function() {
+			/*
+			 * You must increment the version by +1 in order to get the 'onupgradeneeded' event 
+			 * called. ONLY there you can modify the db itself (create new object stores, etc).
+			 */
+			var request = indexedDB.open('todos', 5);
+			window.console.log('open: request= ' + request);
+			
+			request.onupgradeneeded = function(e) {
+				window.console.log('open - onupgradeneeded: e= ', e);
+
+				todoController.db = e.target.result;
+				var db = todoController.db;
+				window.console.log('open - onupgradeneeded: db= ', db);
+
+				if(!db.objectStoreNames.contains('todo')){
+					db.createObjectStore('todo', {keyPath: 'timeStamp', autoIncrement: true});
+				}
+			};
+
+			request.onsuccess = function(e) {
+				window.console.log('open - onsuccess: e= ', e);
+				todoController.db = e.target.result;
+				var db = todoController.db;
+				window.console.log('open - onsuccess: db= ', db);
+
+				todoController.getAllTodoItems();
+			};
+			
+			request.onerror = todoController.onerror;
+		};
+
+		// add
+		todoController.addTodo = function(todoText) {
+			var db = todoController.db;
+			var trans = db.transaction(['todo'], 'readwrite');
+			var store = trans.objectStore('todo');
+			var request = store.put({
+				'text': todoText,
+				'timeStamp' : new Date().getTime()
+			});
+
+			request.onsuccess = function(e) {
+				// Re-render all the todo's
+				todoController.getAllTodoItems();
+			};
+
+			request.onerror = todoController.onerror;
+		};
+
+		// read
+		todoController.getAllTodoItems = function() {
+			$('#todos').html('');
+			
+			var db = todoController.db;
+			var trans = db.transaction(['todo'], 'readwrite');
+			var store = trans.objectStore('todo');
+
+			// Get everything in the store;
+			var keyRange = IDBKeyRange.lowerBound(0);
+			var cursorRequest = store.openCursor(keyRange);
+
+			cursorRequest.onsuccess = function(e) {
+				var result = e.target.result;
+				if(!!result == false)
+					return;
+
+				todoController.renderTodo(result.value);
+				result.continue();
+			};
+
+			cursorRequest.onerror = todoController.onerror;
+		};
+
+		// delete
+		todoController.deleteTodo = function(id) {
+			var db = todoController.db;
+			var trans = db.transaction(['todo'], 'readwrite');
+			var store = trans.objectStore('todo');
+
+			var request = store.delete(id);
+
+			request.onsuccess = function(e) {
+				todoController.getAllTodoItems();  // Refresh the screen
+			};
+
+			request.onerror = todoController.onerror;
+		};
+
+		// helper
+		todoController.renderTodo = function(row) {
+			var li = '<li>' + row.text + '<a href="#" class="delete">[Delete]</a><span>' 
+					+ row.timeStamp + '</span></li>';
+			$('#todos').append(li);
+		};
+	</script>
+</head>
+<body>
+<section class="shell">
+	<h1>TODO: An IndexedDB Example</h1>
+	<ul id="todos">
+
+	</ul>
+	<input type="text" id="todo" name="todo" placeholder="What do you need to do?" />
+	<input type="submit" value="Add Todo Item" />
+</section>
+</body>
+</html>
