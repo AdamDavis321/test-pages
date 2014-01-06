@@ -1,0 +1,27 @@
+ul.treeList {
+	margin: 0;
+	padding: 0;
+}
+ul.treeList ul {
+	margin: 0;
+	padding: 0 0 0 1.5em;
+}
+ul.treeList li {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+ul.treeList li.treeList-category:before {
+	content: "\25B8";
+	cursor: pointer;
+	display: inline-block;
+	width: 1.5em;
+}
+ul.treeList li.treeList-category.treeList-open:before {
+	content: "\25BE";
+	cursor: pointer;
+	display: inline-block;
+	width: 1.5em;
+}
+ul.treeList li.treeList-item {
+}

@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+		"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="AUTHOR" content="Adam Davis">
+	<title>Links Menu</title>
+	<link rel="StyleSheet" href="css/standard.css" type="text/css">
+	<link rel="StyleSheet" href="css/jquery.treeList.css" type="text/css">
+	<style type="text/css" media="screen">
+		#page {
+			max-width: 64em;
+			min-width: 25em;
+		}
+		#menuContainer {
+			border: 1px solid #B2B2B7;
+			border-radius: 6px;
+			margin: 0;
+			padding-left: 2px;
+			width: 24em;
+		}
+		ul.treeList li {
+			border-radius: 6px;
+			margin: 2px 2px 2px 0;
+		}
+		ul.treeList li.treeList-category {
+			background-color: #D2D2D7;
+			border: 1px solid #B2B2B7;
+			list-style-image: url(images/plus.png);
+			list-style-type: none;
+		}
+		ul.treeList li.treeList-category.treeList-open {
+			background-color: #F7F7F7;
+			list-style-image: url(images/minus.png);
+			list-style-type: none;
+		}
+	</style>
+	<script type="text/javascript" src="js/jquery-1.8.3.js"></script>
+	<script type="text/javascript" src="js/jquery.treeList.js"></script>
+	<script type="text/javascript">
+		if (!console) {
+			console = {log: function(){}};
+		}
+		var itemCount = 0;
+	
+		var getCookie = function(name) {
+			var nameEQ = name + "=";
+			var ca = document.cookie.split(';');
+			for (var i = 0; i < ca.length; i++) {
+				var c = ca[i];
+				while (c.charAt(0) == ' ') {
+					c = c.substring(1, c.length);
+				}
+				if (c.indexOf(nameEQ) == 0) {
+					return c.substring(nameEQ.length, c.length);
+				}
+			}
+			return "";
+		};
+	
+		var setCookie = function(name, value, days) {
+			if (days) {
+				var date = new Date();
+				date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+				var expires = "; expires=" + date.toGMTString();
+			}
+			else {
+				var expires = "";
+			}
+			document.cookie = name + "=" + value + expires + "; path=/";
+		};
+
+		var createItem = function(data) {
+			itemCount++;
+			var item = $('<li id="item' + itemCount + '"></li>');
+			if (data.category) {
+				item.append(data.category);
+				if (data.children && data.children.length) {
+					var list = $('<ul></ul>');
+					for (var i = 0, len = data.children.length; i < len; i++) {
+						list.append(createItem(data.children[i]));
+					}
+					item.append(list);
+				}
+			} else if (data.link && data.url) {
+				item.append($('<a href="' + data.url + '">' + data.link + '</a>')); //-- target="_blank"
+			}
+			return item;
+		};
+		
+		var itemClose = function(item) {
+			console.log('itemClose: item.id= ' + item.id);
+			var openItems= getCookie('openItems').split('|');
+			var i = $.inArray(item.id, openItems);
+			if (i >= 0) {
+				openItems.splice(i, 1);
+			}
+			setCookie('openItems', openItems.join('|'), 1);
+		};
+
+		var itemOpen = function(item) {
+			console.log('itemOpen: item.id= ' + item.id);
+			var openItems= getCookie('openItems').split('|');
+			var i = $.inArray(item.id, openItems);
+			if (i < 0) {
+				openItems.push(item.id);
+			}
+			setCookie('openItems', openItems.join('|'), 1);
+		};
+		
+		var loadMenu = function(container, data) {
+			if (data && data.children && data.children.length) {
+				var list = $('<ul></ul>');
+				for (var i = 0, len = data.children.length; i < len; i++) {
+					list.append(createItem(data.children[i]));
+				}
+				list.treeList({onOpen: itemOpen, onClose: itemClose});
+				container.append(list);
+			}
+		};
+		
+		$(document).ready(function() {
+			$.ajax({
+				dataType: "json",
+				url: "data/linksMenu.json",
+				error: function(jqXHR, textStatus, errorThrown) {
+					alert('An error occurred while retrieving the menu contents: \nStatus= ' 
+							+ textStatus + '\nError= ' + errorThrown);
+				},
+				success: function(data, textStatus, jqXHR) {
+					loadMenu($('#menuContainer'), data);
+					var openItems= getCookie('openItems').split('|');
+					for (var i = 0, len = openItems.length; i < len; i++) {
+						var li = $('#' + openItems[i]);
+						li.addClass('treeList-open');
+						li.children().slideDown();
+					}
+				}
+			});
+		});
+	</script>
+</head>
+<body>
+<div id="page">
+
+	<div id="pageHeader">
+		<h1>Links Menu</h1>
+	</div>
+	<div id="pageContent">
+
+		<div id="menuContainer">
+		</div>
+
+	</div>
+
+</div>
+</body>
+</html>

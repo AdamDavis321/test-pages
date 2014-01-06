@@ -1,0 +1,200 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+		"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="AUTHOR" content="Adam Davis">
+	<title>Links Menu</title>
+	<link rel="StyleSheet" href="css/standard.css" type="text/css">
+	<link rel="StyleSheet" href="css/treeList.css" type="text/css">
+	<style type="text/css" media="screen">
+		#page {
+			max-width: 64em;
+			min-width: 25em;
+		}
+		#pageHeader h1 {
+			float: left;
+		}
+		#pageHeader div {
+			float: right;
+			font-size: 72%;
+		}
+		#menuContainer {
+			border: 1px solid #B2B2B7;
+			border-radius: 6px;
+			margin: 0;
+			padding-left: 2px;
+			width: 24em;
+		}
+		ul.treeList li {
+			border-radius: 6px;
+			margin: 2px 2px 2px 0;
+			padding-left: 0.25em;
+		}
+		ul.treeList li.treeList-category {
+			background-color: #D2D2D7;
+			border: 1px solid #B2B2B7;
+		}
+		ul.treeList li.treeList-category.treeList-open {
+			background-color: #F7F7F7;
+		}
+	</style>
+	<script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript" src="js/treeList.js"></script>
+	<script type="text/javascript">
+		if (!window.console) {
+			window.console = {log: function(){}};
+		}
+		
+		function getCookie(name) {
+			"use strict";
+			var nameEQ = name + "=";
+			var ca = document.cookie.split(';');
+			for (var i = 0; i < ca.length; i++) {
+				var c = ca[i];
+				while (c.charAt(0) === ' ') {
+					c = c.substring(1, c.length);
+				}
+				if (c.indexOf(nameEQ) === 0) {
+					return c.substring(nameEQ.length, c.length);
+				}
+			}
+			return "";
+		}
+		
+		function getCookieAsArray(name, delimiter) {
+			"use strict";
+			var cookie = getCookie(name);
+			return cookie? cookie.split(delimiter) : [];
+		}
+	
+		function setCookie(name, value, days) {
+			"use strict";
+			var expires;
+			if (days) {
+				var date = new Date();
+				date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+				expires = "; expires=" + date.toGMTString();
+			}
+			else {
+				expires = "";
+			}
+			document.cookie = name + "=" + value + expires + "; path=/";
+		}
+		
+		function setCookieFromArray(name, delimiter, values, days) {
+			"use strict";
+			setCookie(name, values.join(delimiter), days);
+		}
+
+		function MenuController() {
+			"use strict";
+			this.menuTree = null;
+		}
+		
+		MenuController.prototype.loadMenu = function(data, container, openAllControl, 
+				closeAllControl) {
+			"use strict";
+			if (data) {
+				var list = $(data);
+				this.menuTree = new TreeList(list, {
+					categoryIdPrefix: 'linkCategory',
+					onOpen: function(item) {
+						window.console.log('item opened: item.id= ' + item.id);
+						var openItems = getCookieAsArray('openItems', '|');
+						var i = $.inArray(item.id, openItems);
+						if (i < 0) {
+							openItems.push(item.id);
+						}
+						setCookieFromArray('openItems', '|', openItems, 1);
+					}, 
+					onClose: function(item) {
+						window.console.log('item closed: item.id= ' + item.id);
+						var openItems = getCookieAsArray('openItems', '|');
+						var i = $.inArray(item.id, openItems);
+						if (i >= 0) {
+							openItems.splice(i, 1);
+						}
+						setCookieFromArray('openItems', '|', openItems, 1);
+					}
+				});
+				container.append(list);
+				var controller = this;
+				if (openAllControl) {
+					openAllControl.click(function() {
+						controller.menuTree.openAll();
+					});
+				}
+				if (closeAllControl) {
+					closeAllControl.click(function() {
+						controller.menuTree.closeAll();
+					});
+				}
+			} else {
+				window.alert('The menu contents are empty.');
+			}
+		};
+
+		MenuController.prototype.reopenPreviousItems = function() {
+			"use strict";
+			if (this.menuTree) {
+				// Read previously open IDs from the cookie
+				var openItems = getCookieAsArray('openItems', '|');
+				window.console.log('openItems (from cookie)= ' + openItems);
+				this.menuTree.fireEvents = false;
+				var i, len;
+				for (i = 0, len = openItems.length; i < len; i++) {
+					var li = $('#' + openItems[i]);
+					if (li && li.length) {
+						this.menuTree.open(li);
+					} else {
+						// Mark missing IDs for later removal
+						openItems[i] = '';
+					}
+				}
+				this.menuTree.fireEvents = true;
+				// Remove missing IDs from the cookie
+				for (i = openItems.length - 1; i >= 0; i--) {
+					if (!openItems[i]) {
+						openItems.splice(i, 1);
+					}
+				}
+				setCookieFromArray('openItems', '|', openItems, 1);
+			}
+		};
+		
+		$(document).ready(function() {
+			"use strict";
+			var controller = new MenuController();
+			$.ajax({
+				dataType: "html",
+				url: "data/linkItems.html",
+				error: function(jqXHR, textStatus, errorThrown) {
+					window.alert('An error occurred while retrieving the menu contents: \nStatus= ' 
+							+ textStatus + '\nError= ' + errorThrown);
+				},
+				success: function(data, textStatus, jqXHR) {
+					controller.loadMenu(data, $('#menuContainer'), $('#openAll'), $('#closeAll'));
+					controller.reopenPreviousItems();
+				}
+			});
+		});
+	</script>
+</head>
+<body>
+<div id="page">
+
+	<div id="pageHeader">
+		<h1>Links Menu</h1>
+		<div><button id="openAll">Open All</button> <button id="closeAll">Close All</button></div>
+	</div>
+	<div id="pageContent">
+
+		<div id="menuContainer">
+		</div>
+
+	</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Windchill Links</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link rel="StyleSheet" href="generic/css/standard.css" title="Standard" type="text/css" />
+	<link rel="StyleSheet" href="generic/css/windchill.css" title="Standard" type="text/css" />
+	<style type="text/css" media="screen">
+		#linkTable {
+			display: none;
+			visibility: hidden;
+		}
+		.Frame {
+			float: left;
+			margin: 0 1% 0.5em 0;
+		}
+		.Frame h2 {
+			background-color: #FDF8CE;
+			border-bottom: 1px solid #BABFB0;
+			color: #48483E;
+			font-size: 106%;
+			margin: 0 0 0.2em 0;
+			padding: 5px;
+		}
+		.Frame p {
+			margin: 0;
+			padding: 0 5px;
+		}
+		.Frame ul {
+			margin: 5px;
+		}
+		#footerMessage {
+			float: left;
+			font-size: 82%;
+			margin-left: 2em;
+			margin-right: 2em;
+		}
+	</style>
+	<style type="text/css" media="print">
+		a[href]:after {
+			content: " (" attr(href) ") ";
+			font-size: 88%;
+		}
+		.Frame {
+			float: none;
+			width: 89%
+		}
+	</style>
+	<script type="text/javascript" src="generic/js/miscUtils.js"></script>
+	<script type="text/javascript" src="generic/js/localStorage.js"></script>
+	<script type="text/javascript" src="generic/js/ServerLinks.js"></script>
+	<script type="text/javascript" src="generic/js/FloatTable.js"></script>
+	<script type="text/javascript">
+		if (!window.console) {
+			window.console = {
+				log: function() {}
+			};
+		}
+
+		function LinkTableController() {
+			this.servers= [];
+			this.links= [];
+			this.floatTable= null;
+			this.serverLinks= null;
+		}
+
+		LinkTableController.prototype = {
+			createServerLinks : function() {
+				var me = this;
+				window.console.log('Starting createServerLinks');
+				this.serverLinks= new ServerLinks(this.servers, this.links, 'linkTable', 'server',
+						'Frame', null);
+				this.serverLinks.initLinkArea();
+				document.getElementById('linkTable').style.display= 'block';
+				document.getElementById('loadMessage').innerHTML= 
+					'Formatting server links &hellip;';
+				window.setTimeout(
+						function () {
+							me.formatLinks();
+						}, 200);
+			},
+			
+			formatLinks : function() {
+				window.console.log('Starting formatLinks');
+				this.floatTable= new FloatTable('linkTable', 'server');
+				this.floatTable.calculateCellWidth();
+				this.floatTable.formatAsTable();
+				document.getElementById('linkTable').style.visibility= 'visible';
+				document.getElementById('loadMessage').style.display= 'none';
+				window.console.log('formatLinks - ' + this.floatTable);
+			},
+			
+			loadLinkInfo : function() {
+				window.console.log('Starting loadLinkInfo');
+				this.links = getItemsFromLocalStorage('WindchillLinks_linkInfo', LinkInfo);
+				if (this.links.length === 0) {
+					this.setDefaultLinkInfo();
+					this.saveLinkInfo();
+				}
+			},
+			
+			loadServerInfo : function() {
+				window.console.log('Starting loadServerInfo');
+				this.servers = getItemsFromLocalStorage('WindchillLinks_serverInfo', ServerInfo);
+				if (this.servers.length === 0) {
+					this.setDefaultServerInfo();
+					this.saveServerInfo();
+				}
+			},
+	
+			saveLinkInfo : function() {
+				window.console.log('Starting saveLinkInfo');
+				localStorage['WindchillLinks_linkInfo'] = JSON.stringify(this.links);
+			},
+	
+			saveServerInfo : function() {
+				window.console.log('Starting saveServerInfo');
+				localStorage['WindchillLinks_serverInfo'] = JSON.stringify(this.servers);
+			},
+			
+			setDefaultLinkInfo : function() {
+				window.console.log('Starting setDefaultLinkInfo');
+				this.links = [
+					new LinkInfo("Start Page", "/"),
+					new LinkInfo("Index of wtcore/jsp/ext/tacom", "/wtcore/jsp/ext/tacom/"),
+					new LinkInfo("Logical Attribute Report", "/meta/LogicalAttributeReport.jsp"),
+					new LinkInfo("Quick Index", "/wtcore/jsp/ext/tacom/quickIndex/index.jsp"),
+					new LinkInfo("Task Runner", "/wtcore/jsp/ext/tacom/utils/taskRunner.jsp")
+				];
+			},
+			
+			setDefaultServerInfo : function() {
+				window.console.log('Starting setDefaultServerInfo');
+				this.servers = [
+					new ServerInfo("105: Angela Liu", "Legend Loading", 
+							"http://137.128.136.105/Windchill", "dev105"),
+					new ServerInfo("106: Jim Held", "Development", 
+							"http://137.128.136.106/Windchill", "dev106"),
+					new ServerInfo("107: Brandon Lehman", "Development (2.3 build)", 
+							"http://137.128.136.107/Windchill", "dev107"),
+					new ServerInfo("108: Mark Jochum", "Development", 
+							"http://137.128.136.108/Windchill", "dev108"),
+					new ServerInfo("109: Dave Fisher", "Spec Transformation", 
+							"http://137.128.136.109/Windchill", "dev109"),
+					new ServerInfo("112: Jim Held", "Development (10.1)", 
+							"http://137.128.136.112/Windchill", "dev112"),
+					new ServerInfo("114: Adam Davis", "Development", 
+							"http://137.128.136.114/Windchill", "dev114"),
+					new ServerInfo("115: Mark Stine", "Development (Techloop)", 
+							"http://137.128.136.115/Windchill", "dev115"),
+					new ServerInfo("116: Kyle Morgensai", "Development (Spec Transformation)", 
+							"http://137.128.136.116/Windchill", "dev116"),
+					new ServerInfo("117: Jon Faith", "Development (2.3 build)", 
+							"http://137.128.136.117/Windchill", "dev117"),
+					new ServerInfo("10.1 Migration: Dave Fisher", "",
+							"http://drendevcassi619.tardecdren.army.mil/Windchill", "devdren"),
+					new ServerInfo("ACE TDREN Data", "CAC only", 
+							"https://ace.tardecdren.army.mil/Data", "drendata"),
+					new ServerInfo("ACE TDREN Windchill", "Training", 
+							"https://ace.tardecdren.army.mil/Windchill", "drenwc"),
+					new ServerInfo("ACE TDREN Functional", "Testing", 
+							"https://ace.tardecdren.army.mil/Functional", "drenfunc"),
+					new ServerInfo("ACE TDREN Demo", "Windchill 10.1", 
+							"https://ace.tardecdren.army.mil/Demo", "drendemo"),
+					new ServerInfo("Staging", "Currently down for cloning", 
+							"http://137.128.128.109/Windchill", "staging"),
+					new ServerInfo("Production (ACE2)", "", 
+							"https://ace2.tacom.army.mil/Windchill", "aceprod")
+				];
+			}
+		};
+		
+		window.onload= function() {
+			window.console.log('Starting onload');
+			var controller = new LinkTableController();
+			window.console.log('onload - localStorage: keys= ' + getLocalStorageKeys().join('|'));
+			controller.loadServerInfo();
+			controller.loadLinkInfo();
+			window.onresize= function() {
+				window.console.log('Starting onresize');
+				if (controller.floatTable) {
+					controller.floatTable.formatAsTable();
+				}
+				window.console.log('onresize - ' + controller.floatTable);
+			};
+			window.setTimeout(
+					function() {
+						controller.createServerLinks();
+					}, 200);
+		};
+	</script>
+</head>
+<body>
+<div id="page">
+
+	<div id="pageHeader">
+		<h1>Windchill Links</h1>
+	</div>
+
+	<div id="pageContent">
+		<p id="loadMessage">Loading server links &hellip;</p>
+		<div id="linkTable"></div>
+	</div>
+
+	<div id="pageFooter">
+		<div class="Author">Created by Adam Davis</div>
+		<div id="messageArea"></div>
+		<div class="Links"><a href="index.html">Home</a></div>
+		<div class="FloatBlocker"></div>
+	</div>
+
+</div>
+</body>
+</html>

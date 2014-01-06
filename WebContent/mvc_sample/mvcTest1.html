@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="AUTHOR" content="Adam Davis" />
+	<title>MVC Test 1: MemoryAdapter</title>
+	<link rel="stylesheet" href="../generic/css/standard.css" />
+	<link rel="stylesheet" href="../generic/css/dataTable.css" />
+	<link rel="stylesheet" href="mvcTest.css" />
+	<link rel="shortcut icon" href="../generic/images/page.ico" />
+	<script type="text/javascript" src="../generic/js/consoleGuard.js"></script>
+	<script type="text/javascript" src="../generic/js/miscUtils.js"></script>
+	<script type="text/javascript" src="../generic/js/dateUtils.js"></script>
+	<script type="text/javascript" src="../generic/js/json2.js"></script>
+	<script type="text/javascript" src="../generic/js/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript" src="defaultItems.js"></script>
+	<script type="text/javascript" src="model.js"></script>
+	<script type="text/javascript" src="dataTable.js"></script>
+	<script type="text/javascript" src="validator.js"></script>
+	<script type="text/javascript" src="mvcTest1.js"></script>
+</head>
+<body>
+<div id="page">
+
+	<div id="pageHeader">
+		<h1>MVC Test 1: MemoryAdapter</h1>
+	</div>
+	<div id="pageContent">
+
+		<form id="editForm" name="editForm" action="mvcTest1.html">
+			<table>
+				<tr>
+					<th>
+						<label for="idInput">ID:</label>
+					</th>
+					<td>
+						<input type="text" id="idInput" name="idInput" size="5"
+								disabled="disabled">
+					</td>
+				</tr>
+				<tr>
+					<th>
+						<label for="categoryInput">Category:</label>
+					</th>
+					<td>
+						<select id="categoryInput" name="categoryInput">
+								<option value="">None</option>
+								<option>Books</option>
+								<option>Cars</option>
+								<option>Household</option>
+								<option>Movies</option>
+								<option>Music</option>
+								<option>Sports</option>
+								<option>Television</option>
+								<option>Vacation</option>
+								<option>Work</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th>
+						<label for="titleInput">Title:</label>
+					</th>
+					<td>
+						<input type="text" id="titleInput" name="titleInput" size="50"
+								maxlength="60">
+					</td>
+				</tr>
+				<tr>
+					<th>
+						<label for="budgetInput">Budget:</label>
+					</th>
+					<td>
+						<input type="number" id="budgetInput" name="budgetInput" size="10"
+								maxlength="10">
+					</td>
+				</tr>
+				<tr>
+					<th>
+						<label for="startDateInput">Start Date:</label>
+					</th>
+					<td>
+						<input type="text" id="startDateInput" name="startDateInput" size="24"
+								maxlength="24">
+					</td>
+				</tr>
+				<tr>
+					<th>&nbsp;</th>
+					<td>
+						<button type="button" id="saveButton" name="saveButton">Save</button>
+						<button type="button" id="resetButton" name="resetButton">Reset</button>
+						<button type="button" id="deleteButton" name="deleteButton">Delete</button>
+					</td>
+				</tr>
+			</table>
+		</form>
+		<div id="displayTableContainer">
+			<table class="DataTable" id="displayTable"></table>
+		</div>
+
+	</div>
+	<div id="pageFooter">
+		<div class="Author">Created by Adam Davis</div>
+		<div class="Links"><a href="../index.html">Home</a></div>
+		<div class="FloatBlocker"></div>
+	</div>
+
+</div>
+</body>
+</html>

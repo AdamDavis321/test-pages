@@ -1,0 +1,419 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+		"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="AUTHOR" content="Adam Davis">
+	<title>Tree List Test</title>
+	<link rel="StyleSheet" href="generic/css/standard.css" title="Standard" type="text/css">
+	<style type="text/css" media="screen">
+		#page {
+			margin: 0 auto;
+			max-width: 64em;
+			min-width: 20em;
+		}
+		h2 {
+			clear: both;
+		}
+		.SelectBoxes {
+			float: left;
+			margin: 0 1em 1em 0;
+		}
+		#sbToggle, #ulToggle, #btToggle {
+			clear: both;
+			display: block;
+			float: none;
+			font-size: 0.6em;
+			vertical-align: baseline;
+		}
+		.Expanded {
+			display: block;
+		}
+		.Collapsed {
+			display: none;
+		}
+	</style>
+	<script type="text/javascript">
+		function toggleContainer() {
+			var toggle = this;
+			var id = toggle.id;
+			if (id && id.length > 'Toggle'.length) {
+				var prefix = id.substring(0, id.length - 'Toggle'.length);
+				var container = document.getElementById(prefix + 'Container');
+				if (container) {
+					if (container.className == 'Expanded') {
+						container.className = 'Collapsed';
+						toggle.innerHTML = '+';
+					}
+					else {
+						container.className = 'Expanded';
+						toggle.innerHTML = '&minus;';
+					}
+				}
+			}
+		}
+		
+		window.onload = function() {
+			var sbToggle = document.getElementById('sbToggle');
+			sbToggle.onclick = toggleContainer;
+			var ulToggle = document.getElementById('ulToggle');
+			ulToggle.onclick = toggleContainer;
+			var btToggle = document.getElementById('btToggle');
+			btToggle.onclick = toggleContainer;
+		};
+	</script>
+</head>
+<body>
+<div id="page">
+
+	<div id="pageHeader">
+		<h1>Tree List Test</h1>
+	</div>
+	<div id="pageContent">
+
+		<button type="button" id="sbToggle">&minus;</button>
+		<div id="sbContainer" class="Expanded">
+			<h2>
+				Select Boxes with Indented Options 
+			</h2>
+			<div class="SelectBoxes">
+				<select name="selPsuedoPlain1" size="1">
+					<option>Level 1, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;Level 2a, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;Level 2a, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3a, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3a, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3a, item 3</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3a, item 4</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;Level 2a, item 3</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;Level 2a, item 4</option>
+					<option>Level 1, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;Level 2b, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;Level 2b, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3b, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3b, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;Level 2b, item 3</option>
+					<option>Level 1, item 3</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;Level 2c, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3c, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3c, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 4a, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 4a, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 4a, item 3</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 4a, item 4</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3c, item 3</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3c, item 4</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 4b, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 4b, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 4b, item 3</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3c, item 5</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3c, item 6</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3c, item 7</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;Level 2d, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3d, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3d, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;Level 2d, item 3</option>
+				</select>
+				<br><br>
+				<select name="selPsuedoPlain2" size="10">
+					<option>Level 1, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;Level 2a, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;Level 2a, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3a, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3a, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3a, item 3</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3a, item 4</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;Level 2a, item 3</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;Level 2a, item 4</option>
+					<option>Level 1, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;Level 2b, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;Level 2b, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3b, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3b, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;Level 2b, item 3</option>
+					<option>Level 1, item 3</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;Level 2c, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3c, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3c, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 4a, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 4a, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 4a, item 3</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 4a, item 4</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3c, item 3</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3c, item 4</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 4b, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 4b, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 4b, item 3</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3c, item 5</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3c, item 6</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3c, item 7</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;Level 2d, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3d, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3d, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;Level 2d, item 3</option>
+				</select>
+			</div>
+			<div class="SelectBoxes">
+				<select name="selPsuedoBullet1" size="1">
+					<option>Level 1, item 1</option>
+					<option>&nbsp;&nbsp;&bull;&nbsp;Level 2a, item 1</option>
+					<option>&nbsp;&nbsp;&bull;&nbsp;Level 2a, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3a, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3a, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3a, item 3</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3a, item 4</option>
+					<option>&nbsp;&nbsp;&bull;&nbsp;Level 2a, item 3</option>
+					<option>&nbsp;&nbsp;&bull;&nbsp;Level 2a, item 4</option>
+					<option>Level 1, item 2</option>
+					<option>&nbsp;&nbsp;&bull;&nbsp;Level 2b, item 1</option>
+					<option>&nbsp;&nbsp;&bull;&nbsp;Level 2b, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3b, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3b, item 2</option>
+					<option>&nbsp;&nbsp;&bull;&nbsp;Level 2b, item 3</option>
+					<option>Level 1, item 3</option>
+					<option>&nbsp;&nbsp;&bull;&nbsp;Level 2c, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3c, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3c, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 4a, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 4a, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 4a, item 3</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 4a, item 4</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3c, item 3</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3c, item 4</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 4b, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 4b, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 4b, item 3</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3c, item 5</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3c, item 6</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3c, item 7</option>
+					<option>&nbsp;&nbsp;&bull;&nbsp;Level 2d, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3d, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3d, item 2</option>
+					<option>&nbsp;&nbsp;&bull;&nbsp;Level 2d, item 3</option>
+				</select>
+				<br><br>
+				<select name="selPsuedoBullet2" size="10">
+					<option>Level 1, item 1</option>
+					<option>&nbsp;&nbsp;&bull;&nbsp;Level 2a, item 1</option>
+					<option>&nbsp;&nbsp;&bull;&nbsp;Level 2a, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3a, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3a, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3a, item 3</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3a, item 4</option>
+					<option>&nbsp;&nbsp;&bull;&nbsp;Level 2a, item 3</option>
+					<option>&nbsp;&nbsp;&bull;&nbsp;Level 2a, item 4</option>
+					<option>Level 1, item 2</option>
+					<option>&nbsp;&nbsp;&bull;&nbsp;Level 2b, item 1</option>
+					<option>&nbsp;&nbsp;&bull;&nbsp;Level 2b, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3b, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3b, item 2</option>
+					<option>&nbsp;&nbsp;&bull;&nbsp;Level 2b, item 3</option>
+					<option>Level 1, item 3</option>
+					<option>&nbsp;&nbsp;&bull;&nbsp;Level 2c, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3c, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3c, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 4a, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 4a, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 4a, item 3</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 4a, item 4</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3c, item 3</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3c, item 4</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 4b, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 4b, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 4b, item 3</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3c, item 5</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3c, item 6</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3c, item 7</option>
+					<option>&nbsp;&nbsp;&bull;&nbsp;Level 2d, item 2</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3d, item 1</option>
+					<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;Level 3d, item 2</option>
+					<option>&nbsp;&nbsp;&bull;&nbsp;Level 2d, item 3</option>
+				</select>
+			</div>
+			<div class="SelectBoxes">
+				<select name="selPsuedoMiddot1" size="1">
+					<option>Level 1, item 1</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;Level 2a, item 1</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;Level 2a, item 2</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3a, item 1</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3a, item 2</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3a, item 3</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3a, item 4</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;Level 2a, item 3</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;Level 2a, item 4</option>
+					<option>Level 1, item 2</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;Level 2b, item 1</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;Level 2b, item 2</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3b, item 1</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3b, item 2</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;Level 2b, item 3</option>
+					<option>Level 1, item 3</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;Level 2c, item 1</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3c, item 1</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3c, item 2</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 4a, item 1</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 4a, item 2</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 4a, item 3</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 4a, item 4</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3c, item 3</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3c, item 4</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 4b, item 1</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 4b, item 2</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 4b, item 3</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3c, item 5</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3c, item 6</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3c, item 7</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;Level 2d, item 2</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3d, item 1</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3d, item 2</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;Level 2d, item 3</option>
+				</select>
+				<br><br>
+				<select name="selPsuedoMiddot2" size="10">
+					<option>Level 1, item 1</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;Level 2a, item 1</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;Level 2a, item 2</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3a, item 1</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3a, item 2</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3a, item 3</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3a, item 4</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;Level 2a, item 3</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;Level 2a, item 4</option>
+					<option>Level 1, item 2</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;Level 2b, item 1</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;Level 2b, item 2</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3b, item 1</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3b, item 2</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;Level 2b, item 3</option>
+					<option>Level 1, item 3</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;Level 2c, item 1</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3c, item 1</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3c, item 2</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 4a, item 1</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 4a, item 2</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 4a, item 3</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 4a, item 4</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3c, item 3</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3c, item 4</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 4b, item 1</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 4b, item 2</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 4b, item 3</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3c, item 5</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3c, item 6</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3c, item 7</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;Level 2d, item 2</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3d, item 1</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;&nbsp;Level 3d, item 2</option>
+					<option>&middot;&nbsp;&nbsp;&nbsp;Level 2d, item 3</option>
+				</select>
+			</div>
+		</div>
+		
+		<button type="button" id="ulToggle">+</button>
+		<div id="ulContainer" class="Collapsed">
+			<h2>
+				Tree of Unordered Lists
+			</h2>
+			<ul>
+				<li>Level 1, item 1
+					<ul>
+						<li>Level 2a, item 1</li>
+						<li>Level 2a, item 2
+							<ul>
+								<li>Level 3a, item 1</li>
+								<li>Level 3a, item 2</li>
+								<li>Level 3a, item 3</li>
+								<li>Level 3a, item 4</li>
+							</ul>
+						</li>
+						<li>Level 2a, item 3</li>
+						<li>Level 2a, item 4</li>
+					</ul>
+				</li>
+				<li>Level 1, item 2
+					<ul>
+						<li>Level 2b, item 1</li>
+						<li>Level 2b, item 2
+							<ul>
+								<li>Level 3b, item 1</li>
+								<li>Level 3b, item 2</li>
+							</ul>
+						</li>
+						<li>Level 2b, item 3</li>
+					</ul>
+				</li>
+				<li>Level 1, item 3
+					<ul>
+						<li>Level 2c, item 1
+							<ul>
+								<li>Level 3c, item 1</li>
+								<li>Level 3c, item 2
+									<ul>
+										<li>Level 4a, item 1</li>
+										<li>Level 4a, item 2</li>
+										<li>Level 4a, item 3</li>
+										<li>Level 4a, item 4</li>
+									</ul>
+								</li>
+								<li>Level 3c, item 3</li>
+								<li>Level 3c, item 4
+									<ul>
+										<li>Level 4b, item 1</li>
+										<li>Level 4b, item 2</li>
+										<li>Level 4b, item 3</li>
+									</ul>
+								</li>
+								<li>Level 3c, item 5</li>
+								<li>Level 3c, item 6</li>
+								<li>Level 3c, item 7</li>
+							</ul>
+						</li>
+						<li>Level 2d, item 2
+							<ul>
+								<li>Level 3d, item 1</li>
+								<li>Level 3d, item 2</li>
+							</ul>
+						</li>
+						<li>Level 2d, item 3</li>
+					</ul>
+				</li>
+			</ul> 
+		</div>
+
+		<button type="button" id="btToggle">+</button>
+		<div id="btContainer" class="Collapsed">
+			<h2>
+				'Bullet-Like' Characters
+			</h2>
+			<table class="TableLines">
+				<tr><td>&#183;</td><td>&middot;</td><td>middle dot</td><td>U+00B7</td></tr>
+				<tr><td>&#8259;</td><td></td><td>hyphen bullet</td><td>U+2043</td></tr>
+				<tr><td>&#8226;</td><td>&bull;</td><td>bullet</td><td>U+2022</td></tr>
+				<tr><td>&#9702;</td><td></td><td>white bullet</td><td>U+25E6</td></tr>
+				<tr><td>&#9679;</td><td></td><td>black circle</td><td>U+25CF</td></tr>
+				<tr><td>&#9675;</td><td></td><td>white circle</td><td>U+25CB</td></tr>
+				<tr><td>&#8728;</td><td></td><td>white circle 2</td><td>U+2218</td></tr>
+				<tr><td>&#9670;</td><td></td><td>black diamond</td><td>U+25C6</td></tr>
+				<tr><td>&#9671;</td><td></td><td>white diamond</td><td>U+25C7</td></tr>
+				<tr><td>&#9724;</td><td></td><td>black square</td><td>U+25FC</td></tr>
+				<tr><td>&#9632;</td><td></td><td>black square 2</td><td>U+25A0</td></tr>
+				<tr><td>&#9726;</td><td></td><td>black square 3</td><td>U+25FE</td></tr>
+				<tr><td>&#9642;</td><td></td><td>black square 4</td><td>U+25AA</td></tr>
+				<tr><td>&#9723;</td><td></td><td>white square</td><td>U+25FB</td></tr>
+				<tr><td>&#9633;</td><td></td><td>white square 2</td><td>U+25A1</td></tr>
+				<tr><td>&#9725;</td><td></td><td>white square 3</td><td>U+25FD</td></tr>
+				<tr><td>&#9643;</td><td></td><td>white square 4</td><td>U+25AB</td></tr>
+				<tr><td>&#8727;</td><td></td><td>star</td><td>U+2217</td></tr>
+			</table>
+		</div>
+
+	</div>
+	<div id="pageFooter">
+		<div class="Author">Created by Adam Davis</div>
+		<div class="Links"><a href="index.html">Home</a></div>
+		<div class="FloatBlocker"></div>
+	</div>
+
+</div>
+</body>
+</html>

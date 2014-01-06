@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="AUTHOR" content="Adam Davis" />
+	<title>localStorage Editor</title>
+	<link rel="stylesheet" href="generic/css/standard.css" />
+	<style type="text/css">
+		#page {
+			min-width: 37em;
+		}
+		#storageEntries {
+			width: 100%;
+		}
+		.TableLines tfoot td {
+			background-color: transparent;
+			border-top: 1px solid gray;
+		}
+		.KeyColumn {
+			width: 30%;
+		}
+		.ValueColumn {
+			width: 54%;
+		}
+		.ActionColumn {
+			width: 16%;
+		}
+		.KeyInput {
+			width: 98%;
+		}
+		.ValueInput {
+			height: 6em;
+			width: 98%;
+		}
+		.KeyMessage {
+			background-color: #FFFFCC;
+		}
+		.ValueMessage {
+			background-color: #FFFFCC;
+		}
+		.CreateAction, .UpdateAction {
+			font-size: 76%;
+			padding-left: 1em;
+			padding-right: 1em;
+		}
+		.DeleteAction {
+			font-size: 76%;
+			padding-left: 0;
+			padding-right: 0;
+		}
+	</style>
+	<script type="text/javascript" src="generic/js/miscUtils.js"></script>
+	<script type="text/javascript" src="generic/js/localStorage.js"></script>
+	<script type="text/javascript" src="generic/js/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript">
+		if (!window.console) {
+			window.console = {
+				log: function() {}
+			};
+		}
+	
+		function EditorController() {
+			this.keys = [];
+			this.values = [];
+		}
+
+		EditorController.prototype = {
+			checkKeyChanges : function(event) {
+				if (event.currentTarget === event.target) {
+					var inputElement = $(event.target);
+					var row = inputElement.parents('tr');
+					var key = $.trim(inputElement.val());
+					this.validateKey(row, key, false);
+				}
+			},
+			
+			checkValueChanges : function(event) {
+				if (event.currentTarget === event.target) {
+					var inputElement = $(event.target);
+					var row = inputElement.parents('tr');
+					var value = inputElement.val();
+					var prevValue = this.getPreviousValue(row);
+					this.validateValue(row, value, false, prevValue);
+				}
+			},
+			
+			createEntry : function(event) {
+				window.console.log('Starting createEntry');
+				
+				if (event.currentTarget === event.target) {
+					var row = $(event.target).parents('tr');
+					var keyElement = row.find('.KeyInput');
+					var key = keyElement.val();
+					var valueElement = row.find('.ValueInput');
+					var value = valueElement.val();
+					var prevValue = '';
+					var ok = this.validateKey(row, key, true);
+					ok = this.validateValue(row, value, true, prevValue) && ok;
+					if (ok) {
+						localStorage[key] = value;
+						this.keys.push(key);
+						this.keys.sort(compareAlphaNC);
+						keyElement.val('');
+						keyElement.css('background-color', '');
+						valueElement.val('');
+						valueElement.css('background-color', '');
+						this.displayTable();
+					}
+				}
+			},
+			
+			deleteEntry : function(event) {
+				window.console.log('Starting deleteEntry');
+				
+				if (event.currentTarget === event.target) {
+					var row = $(event.target).parents('tr');
+					var keyElement = row.find('td:first');
+					var key = unescapeHTML(keyElement.text());
+					if (confirm('Do you want to delete the "' + key + '" key?')) {
+						localStorage.removeItem(key);
+						var idx = $.inArray(key, this.keys);
+						if (idx >= 0) {
+							this.keys.splice(idx, 1);
+						}
+						this.displayTable();
+					}
+				}
+			},
+			
+			displayTable : function() {
+				window.console.log('Starting displayTable');
+				
+				var rows = [];
+				this.values = [];
+				for (var i = 0; i < this.keys.length; i++) {
+					var key = escapeHTML(this.keys[i]);
+					var value = localStorage[key];
+					this.values.push(value);
+					var value = '<textarea class="ValueInput">' + value 
+							+ '</textarea><span class="ValueMessage"></span>';
+					var actions = '<button type="button" class="UpdateAction">Update</button>' 
+							+ ' <button type="button" class="DeleteAction">Delete</button>';
+					rows.push($('<tr id="storageEntry' + i + '"><td>' + key + '</td><td>' + value 
+							+ '</td><td>' + actions + '</td></tr>'));
+				}
+				$('#storageEntries tbody').empty().append(rows);
+			},
+
+			getPreviousValue : function(row) {
+				var previous = '';
+				var rowId = row.attr('id');
+				var prefixLen = 'storageEntry'.length;
+				if (rowId && rowId.length > prefixLen) {
+					var idx = Number(rowId.substring(prefixLen));
+					if (!isNaN(idx)) {
+						previous = this.values[idx];
+					}
+				}
+			},
+			
+			loadKeys : function() {
+				window.console.log('Starting loadKeys');
+
+				this.keys = getLocalStorageKeys();
+				this.keys.sort(compareAlphaNC);
+
+				window.console.log('loadKeys: keys= ' + this.keys);
+			},
+			
+			setEventHandlers : function() {
+				var table = $('#storageEntries');
+				var me = this;
+				table.on('change', '.KeyInput', function(event) {
+					me.checkKeyChanges(event);
+				});
+				table.on('change', '.ValueInput', function(event) {
+					me.checkValueChanges(event);
+				});
+				table.on('click', '.CreateAction', function(event) {
+					me.createEntry(event);
+				});
+				table.on('click', '.UpdateAction', function(event) {
+					me.updateEntry(event);
+				});
+				table.on('click', '.DeleteAction', function(event) {
+					me.deleteEntry(event);
+				});
+			},
+			
+			updateEntry : function(event) {
+				window.console.log('Starting updateEntry');
+				
+				if (event.currentTarget === event.target) {
+					var row = $(event.target).parents('tr');
+					var keyElement = row.find('td:first');
+					var key = unescapeHTML(keyElement.text());
+					var valueElement = row.find('.ValueInput');
+					var value = valueElement.val();
+					var prevValue = this.getPreviousValue(row);
+					if (this.validateValue(row, value, true, prevValue)) {
+						localStorage[key] = value;
+						var idx = $.inArray(key, this.keys);
+						if (idx >= 0) {
+							this.values[idx] = value;
+							valueElement.css('background-color', '');
+						}
+					}
+				}
+			},
+			
+			validateKey : function(row, key, required) {
+				var ok = true;
+				var inputElement = row.find('.KeyInput');
+				var messageElement = row.find('.KeyMessage');
+				if (!key && required) {
+					inputElement.css('background-color', '#FFFFCC');
+					messageElement.html('The key is required.');
+					ok = false;
+				} else if ($.inArray(key, this.keys) >= 0) {
+					inputElement.css('background-color', '#FFFFCC');
+					messageElement.html('The key must be unique.');
+					ok = false;
+				} else if (key) {
+					inputElement.css('background-color', '#CCEEFF');
+					messageElement.html('');
+				} else {
+					inputElement.css('background-color', '');
+					messageElement.html('');
+				}
+				return ok;
+			},
+			
+			validateValue: function(row, value, required, previousValue) {
+				var ok = true;
+				var inputElement = row.find('.ValueInput');
+				var messageElement = row.find('.ValueMessage');
+				if (!value && required) {
+					inputElement.css('background-color', '#FFFFCC');
+					messageElement.html('The value is required.');
+					ok = false;
+				} else if (value !== previousValue) {
+					inputElement.css('background-color', '#CCEEFF');
+					messageElement.html('');
+				} else {
+					inputElement.css('background-color', '');
+					messageElement.html('');
+				}
+				return ok;
+			}
+		};
+		
+		$(document).ready(function() {
+			window.console.log('Starting document ready');
+			var controller = new EditorController();
+			if (localStorageExists()) {
+				controller.loadKeys();
+				controller.displayTable();
+				controller.setEventHandlers();
+			} else {
+				alert('Sorry, your browser does not support localStorage.');
+			}
+		});
+	</script>
+</head>
+<body>
+<div id="page">
+
+	<div id="pageHeader">
+		<h1>localStorage Editor</h1>
+	</div>
+
+	<div id="pageContent">
+		<form action="localStorageEditor.html">
+			<table class="TableLines" id="storageEntries">
+				<thead>
+					<tr>
+						<th class="KeyColumn">Key</th>
+						<th class="ValueColumn">Value</th>
+						<th class="ActionColumn">Actions</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+				<tfoot>
+					<tr>
+						<td><input type="text" class="KeyInput"><span class="KeyMessage"></span></td>
+						<td><textarea class="ValueInput"></textarea><span class="ValueMessage"></span></td>
+						<td><button type="button" class="CreateAction">Create</button></td>
+					</tr>
+				</tfoot>
+			</table>
+		</form>
+	</div>
+
+	<div id="pageFooter">
+		<div class="Author">Created by Adam Davis</div>
+		<div class="Links"><a href="index.html">Home</a></div>
+		<div class="FloatBlocker"></div>
+	</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,219 @@
+@charset "UTF-8";
+@media all {
+body {
+	font-family: "Palatino Linotype", "Palatino", "Times New Roman", serif;
+	line-height: 1.5;
+	margin: 0;
+	padding: 0;
+}
+h1, h2, h3, h4, h5, h6 {
+	font-family: Verdana, Helvetica, Arial, sans-serif;
+	font-style: normal;
+	font-weight: bold;
+	line-height: 1.0;
+	text-align: left;
+	padding: 0;
+}
+h1 {
+	font-size: 130%;
+	margin: 0.75em 0;
+}
+h2 {
+	font-size: 118%;
+	margin: 0.75em 0;
+}
+h3 {
+	font-size: 112%;
+	margin: 0.5em 0;
+}
+h4 {
+	font-size: 106%;
+	margin: 0.5em 0;
+}
+h5 {
+	font-size: 100%;
+	margin: 0.25em 0;
+}
+h6 {
+	font-size: 94%;
+	margin: 0.25em 0;
+}
+div, form, pre, table, thead, tbody, tfoot, tr, th, td, caption, li, dt {
+	margin: 0;
+	padding: 0;
+}
+p {
+	line-height: inherit;
+	margin: 1em 0;
+	padding: 0;
+}
+pre, code {
+	font-family: "Lucida Console", "Monaco", "Courier New", monospace;
+	font-size: 88%;
+}
+a:LINK {
+	color: #2020A0;
+	text-decoration: none;
+}
+a:VISITED {
+	color: #602060;
+	text-decoration: none;
+}
+a:LINK:HOVER, a:LINK:FOCUS {
+	text-decoration: underline;
+}
+sub, sup { 
+	line-height: 0;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	empty-cells: show;
+}
+caption {
+	caption-side: top;
+}
+td, th {
+	padding: 4px;
+}
+ul, ol, dl, dd {
+	margin: 0;
+	padding: 0 2em;
+}
+button, input, select, textarea {
+	font-family: Verdana, Helvetica, Arial, sans-serif;
+	font-size: 88%;
+	line-height: 1.2;
+}
+input[type=text], input[type=password], input[type=number], select, textarea {
+	border-width: 1px;
+	border-style: solid;
+}
+
+#pageHeader {
+	clear: both;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+}
+#pageHeader h1 {
+	margin: 0;
+}
+#tableOfContents {
+	font-size: 82%;
+	margin-top: 1em;
+}
+
+#pageContent {
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+}
+
+#pageFooter {
+	clear: both;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+}
+#pageFooter .Author {
+	float: left;
+	font-size: 82%;
+}
+#pageFooter .Links {
+	float: right;
+	font-size: 82%;
+}
+
+table.TableLines {
+	border: 2px solid gray;
+}
+.TableLines td, .TableLines th {
+	border: 1px solid gray;
+}
+.TableLines thead th {
+	border-bottom: 2px solid gray;
+}
+.TableLines thead th.MultiLevel {
+	border-bottom: 0;
+}
+.TableLines tfoot td {
+	border-top: 2px solid gray;
+}
+
+.FullWidth {
+	width: 100%;
+}
+
+.FloatBlocker {
+	clear: both;
+}
+}
+
+@media screen {
+body {
+	background-color: #383850;
+	font-size: 100%;
+	padding: 0.5em 0.5%;
+}
+
+#page {
+	background-color: #f7f7f7;
+	border-radius: 10px;
+	color: black;
+}
+#pageHeader {
+	background-color: #d2d2d7;
+	border-radius: 10px 10px 0 0;
+	min-height: 1em;
+	padding-right: 0.5%;
+	padding-left: 0.5%;
+}
+#pageContent {
+	padding-right: 0.5%;
+	padding-left: 0.5%;
+}
+#pageFooter {
+	background-color: #d2d2d7;
+	border-radius: 0 0 10px 10px;
+	min-height: 1em;
+	padding-right: 0.5%;
+	padding-left: 0.5%;
+}
+
+input[type=text], input[type=password], input[type=number], select, textarea {
+	border-color: #686879 #d2d2d7 #d2d2d7 #686879;
+}
+input[type=text]:hover, input[type=password]:hover,input[type=number]:hover,  select:hover, textarea:hover {
+	border-color: #6868ff #d2d2ff #d2d2ff #6868ff;
+}
+input[type=text]:focus, input[type=password]:focus, input[type=number]:focus, select:focus, textarea:focus {
+	border-color: #6868ff #d2d2ff #d2d2ff #6868ff;
+}
+input[type=text][disabled], input[type=password][disabled], input[type=number][disabled], select[disabled], 
+		textarea[disabled] {
+	background-color: #f7f7f7;
+	border-color: #686879 #d2d2d7 #d2d2d7 #686879;
+}
+input[type=text][readonly], input[type=password][readonly], input[type=number][readonly], select[readonly], 
+		textarea[readonly] {
+	background-color: #f7f7f7;
+	border-color: #686879 #d2d2d7 #d2d2d7 #686879;
+}
+
+.TableLines thead th, .TableLines tfoot td {
+	background-color: #d2d2d7;
+}
+.TableLines tbody tr.Even {
+	background-color: #f7f7f7;
+}
+.TableLines tbody tr.Odd {
+	background-color: white;
+}
+}
+
+@media print {
+body {
+	font-size: 12pt;
+}
+#tableOfContents {
+	display: none;
+}
+}

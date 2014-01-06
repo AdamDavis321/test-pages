@@ -1,0 +1,67 @@
+@media all {
+	table.DataTable {
+		border: 1px solid #7A7B71;
+		/* Must specify cellspacing="0" in the table tag to get the desired result */
+		border-collapse: separate;
+	}
+	table.DataTable tr td {
+		border: 1px solid #D5D5C9;
+	}
+	table.DataTable th {
+		border-width: 1px;
+		border-style: solid;
+		border-color: #F0F0F5 #717176 #717176 #F0F0F5;
+	}
+	table.DataTable th.Clicked {
+		border-width: 1px;
+		border-style: solid;
+		border-color: #717176 #F0F0F5 #F0F0F5 #717176;
+	}
+	table.DataTable th.SortedAscending {
+		border-width: 1px;
+		border-style: solid;
+		border-color: #717176 #F0F0F5 #F0F0F5 #717176;
+		background-image: url('../images/sortedAcsending.gif');
+		background-position: center right;
+		background-repeat: no-repeat;
+	}
+	table.DataTable th.SortedDescending {
+		border-width: 1px;
+		border-style: solid;
+		border-color: #717176 #F0F0F5 #F0F0F5 #717176;
+		background-image: url('../images/sortedDescending.gif');
+		background-position: center right;
+		background-repeat: no-repeat;
+	}
+	table.DataTable tr.Error {
+		font-style: italic;
+	}
+}
+
+@media screen {
+	table.DataTable th {
+		background-color: #D2D2D7;
+		color: black;
+	}
+	table.DataTable th.Clicked, table.DataTable th.SortedAscending, 
+			table.DataTable th.SortedDescending {
+		background-color: #C2C2C7;
+		color: black;
+	}
+	table.DataTable tr.Error {
+		background-color: white;
+		color: red;
+	}
+	table.DataTable tr.GroupBreak {
+		background-color: #F1F1F5;
+		color: #48483E;
+	}
+	table.DataTable tr.Even {
+		background-color: #F4F4F7;
+		color: black;
+	}
+	table.DataTable tr.Odd {
+		background-color: white;
+		color: black;
+	}
+}

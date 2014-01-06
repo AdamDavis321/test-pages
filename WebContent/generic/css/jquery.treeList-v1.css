@@ -1,0 +1,25 @@
+ul.treeList {
+	margin: 0;
+	padding: 0;
+}
+ul.treeList ul {
+	margin: 0;
+	padding: 0 0 0 2em;
+}
+ul.treeList li {
+	margin: 0;
+	padding: 0 0 0 0.25em;
+}
+ul.treeList li.treeList-category {
+	cursor: pointer;
+	list-style-position: inside;
+	list-style-type: disc;
+}
+ul.treeList li.treeList-category.treeList-open {
+	list-style-position: inside;
+	list-style-type: none;
+}
+ul.treeList li.treeList-item {
+	cursor: default;
+	list-style: none;
+}
